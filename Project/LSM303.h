@@ -190,7 +190,7 @@ class LSM303
     unsigned int getTimeout(void);
     bool timeoutOccurred(void);
 
-   void enableInterrupt(void);
+    void enableInterrupt(uint16_t zThreshold);
    void disableInterrupt(void);
 
     float heading(void);

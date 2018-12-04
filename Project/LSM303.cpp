@@ -491,22 +491,21 @@ int LSM303::testReg(byte address, regAddr reg)
   }
 }
 
-void LSM303::enableInterrupt(void) {
- // 0 Interrupt active HIGH - 1 open drain - 0 latch int2 - 00 Data Signal on INT2 pad - 1 latch int1 - 00 Data signal on INT1 pad
+void LSM303::enableInterrupt(uint16_t zThreshold) {
+ 
+
  // 0b01000100
  writeAccReg(CTRL_REG3_A, 0x44);
- // 0 AOI - 0 6D - 1 ZHIE - 1 ZLIE - 0000 for YHIE, YLIE, XHIE, XLIE
- // 0b00110000
- writeMagReg(INT1_CFG_A, 0x30);
- // 1LSB ~ 16mg
+ // 0 AOI - 0 6D - 1 ZHIE - 0 ZLIE - 0000 for YHIE, YLIE, XHIE, XLIE
+ // 0b00100000
+ writeMagReg(INT1_CFG_A, 0x20);
+ // 0b00000010
+ writeMagReg(INT1_THS_A, 0x00);//threshold
  // 0b00000001
- writeMagReg(INT1_THS_A, 0x01);//threshold
- // 1LSB ~ 10ms
- // 0b00000000
- writeMagReg(INT1_DURATION_A, 0x00);//duration
+ writeMagReg(INT1_DURATION_A, 0x01);//duration
 }
 
 void LSM303::disableInterrupt(void) {
- writeReg(INT1_CFG_A , 0x0);
+ writeReg(INT1_CFG_A , 0x00);
 
 }
