@@ -77,10 +77,6 @@ void setup() {
 
   //Calibrate mag interrupt thresholds
   calibration();
-  Serial.print ("X Threshold: ");
-  Serial.println (xThreshold);
-  Serial.print ("Y Threshold: ");
-  Serial.println (yThreshold);
   Serial.print ("Z Threshold: ");
   Serial.println (zThreshold);
   Serial.println ();
@@ -184,59 +180,28 @@ void readDistance() {
 
 void calibration() {
   Serial.println("Calibrating... ");
-  int16_t magx[150];
-  int16_t magy[150];
   int16_t magz[150];
-  long sumx, sumy, sumz;
-  long sumdiffx, sumdiffy, sumdiffz;
-  long stdvx, stdvy, stdvz;
-  long avgx, avgy, avgz;
-  sumx = 0;
-  sumy = 0;
+  long sumz, sumdiffz, stdvz, avgz;
   sumz = 0;
-  sumdiffx = 0;
-  sumdiffy = 0;
   sumdiffz = 0;
-  stdvx = 0;
-  stdvy = 0;
   stdvz = 0;
-  avgx = 0;
-  avgy = 0;
   avgz = 0;
   for (int i = 0; i < 150; i++) {
     mag.readMag();
-    magx[i] = mag.m.x;
-    magy[i] = mag.m.y;
     magz[i] = mag.m.z;
-    sumx += (long)mag.m.x;
-    sumy += (long)mag.m.y;
     sumz += (long)mag.m.z;
     Serial.print("Z value: ");
     Serial.println(magz[i]);
     delay(100);
 
   }
-  avgx = (sumx / 150);
-  avgy = (sumy / 150);
   avgz = (sumz / 150);
-  Serial.print("Average X: ");
-  Serial.println(avgx);
-  Serial.print("Average Y: ");
-  Serial.println(avgy);
   Serial.print("Average Z: " );
   Serial.println(avgz);
   for (int i = 0; i < 150; i++) {
-    sumdiffx += sq(magx[i] - avgx);
-    sumdiffy += sq(magy[i] - avgy);
     sumdiffz += sq(magz[i] - avgz);
   }
-
-  stdvx = sqrt(sumdiffx / 150);
-  stdvy = sqrt(sumdiffy / 150);
   stdvz = sqrt(sumdiffz / 150);
-
-  xThreshold = abs(avgx) + stdvx * 5;
-  yThreshold = abs(avgy) + stdvy * 5;
   zThreshold = abs(avgz) + stdvz * 5;
   Serial.println("Calibration Finished");
   Serial.println();
