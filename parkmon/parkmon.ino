@@ -195,7 +195,7 @@ void setup() {
     mag.enableDefault();
 
   //Calibrate mag interrupt thresholds
-//  calibration();
+  calibration();
 //  Serial.print ("Z Threshold: ");
 //  Serial.println (zThreshold);
 //  Serial.println ();
@@ -254,7 +254,7 @@ void loop() {
      
       RfSendDataToServer(3);
   }
-  if ( loopCount == 720 )
+  if ( GPBR->SYS_GPBR[0] == 720 )
   {
       temperature = am2320.readTemperature();
       humidity = am2320.readHumidity();
@@ -303,18 +303,18 @@ void   CollectInfo()
 {
  
   unsigned int ctrl;
-    Serial.print("procesMag ");
+//    Serial.print("processMag ");
     GPBR->SYS_GPBR[0] += 1;
-    Serial.print("in while : ");
-    Serial.println(reset_mode );
+//    Serial.print("in while : ");
+//    Serial.println(reset_mode );
 //    if ( ( reset_mode != 1 ) && (GPBR->SYS_GPBR[0] > 10)) {
  // to handle not make it a as "dead brick"
   //  }
     
     mag.readMag();
-    Serial.print("Mz: ");
+//    Serial.print("Mz: ");
 //    Serial.print("Mz, x ,y: ");
-    Serial.println(mag.m.z);
+//    Serial.println(mag.m.z);
 //    Serial.print(mag.m.z);
 //    Serial.print(", Mx: ");
 //    Serial.print(mag.m.x);
@@ -378,7 +378,7 @@ void GPSinfo() {
  
   Serial.println(gpsString);
   pinMode(enGPSPin, OUTPUT);
-  digitalWrite(enGPSPin, LOW);  // disable GPS now, save power
+//  digitalWrite(enGPSPin, LOW);  // disable GPS now, save power
 }
 
 /* 
