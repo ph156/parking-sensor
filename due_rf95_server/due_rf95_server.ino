@@ -7,7 +7,7 @@
 // It is designed to work with the other example rf95_client
 // Tested with Anarduino MiniWirelessLoRa, Rocket Scream Mini Ultra Pro with
 // the RFM95W, Adafruit Feather M0 with RFM95
-
+// this is based on the example, and modified to fit our need
 #include <SPI.h>
 #include <RH_RF95.h>
 
@@ -19,7 +19,7 @@ RH_RF95 rf95;
 // Need this on Arduino Zero with SerialUSB port (eg RocketScream Mini Ultra Pro)
 //#define Serial SerialUSB
 
-int led = 9;
+int led = 13;
 
 void setup() 
 {
@@ -29,7 +29,8 @@ void setup()
 //  digitalWrite(4, HIGH);
 
   pinMode(led, OUTPUT);     
-  Serial.begin(9600);
+ // Serial.begin(9600);
+  Serial.begin(115200);
   while (!Serial) ; // Wait for serial port to be available
   if (!rf95.init())
   {
@@ -38,7 +39,8 @@ void setup()
   else
   { 
   // Defaults after init are 434.0MHz, 13dBm, Bw = 125 kHz, Cr = 4/5, Sf = 128chips/symbol, CRC on
-    Serial.println("after init");  
+  //  Serial.println("after init; ");  
+    Serial.println("Waiting for client... ");  
   }
   // The default transmitter power is 13dBm, using PA_BOOST.
   // If you are using RFM95/96/97/98 modules which uses the PA_BOOST transmitter pin, then 
@@ -53,8 +55,10 @@ void setup()
 int loopCount = 0;
 void loop()
 {
-  //    Serial.print("loop ");
-  //    Serial.print(loopCount++);
+//    char msg[50];
+//    char pm_id[8];
+  //Serial.print("loop ");
+ // if(loopCount < 5)    Serial.print(loopCount++);
   //    Serial.print("\n\r");
 
   if (rf95.available())
@@ -66,17 +70,26 @@ void loop()
     if (rf95.recv(buf, &len))
     {
       digitalWrite(led, HIGH);
-//      RH_RF95::printBuffer("request: ", buf, len);
-      Serial.print("got request: ");
+ //     RH_RF95::printBuffer("request: ", buf, len);
+ //     Serial.print("got request: ");
       Serial.println((char*)buf);
 //      Serial.print("RSSI: ");
 //      Serial.println(rf95.lastRssi(), DEC);
-      
+//      strncpy( pm_id, (char*)buf, 6);
+//      if ( buf[9] == 'E' )
+//      {
+//        sprintf( msg, " parking space %s is Empty", pm_id); 
+//      }
+//      else
+//      {
+//        sprintf( msg, " parking space %s is Occupied", pm_id); 
+//      }
+//      Serial.print(msg);
       // Send a reply
       uint8_t data[] = "And hello back to you";
       rf95.send(data, sizeof(data));
       rf95.waitPacketSent();
-      Serial.println("Sent a reply");
+//      Serial.println("Sent a reply");
        digitalWrite(led, LOW);
     }
     else
